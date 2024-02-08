@@ -8,27 +8,18 @@ import { useGetTasks } from "./gql/useGetTasks";
 import { useAddTask } from "./gql/useAddTask";
 
 const App = () => {
-  const { addTask } = useAddTask();
+  const { addTask, error } = useAddTask();
   const { tasks } = useGetTasks();
   const [value, setValue] = useState("");
-  const [error, setError] = useState("");
   const theme = useTheme();
 
   const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const hasTask = tasks?.getTasks.find(task => task.name === value);
-    
-    if(value){
-      if(hasTask){
-        setError("This task is exist already");
-      }else{
-        await addTask({ name: value });
-        setValue("");
-      }
-    }else{
-      setError("This field is required");
-      return
-    }
+
+    try{
+      await addTask({ name: value });
+      setValue("")
+    }catch{}
   };
 
   return (
@@ -79,7 +70,6 @@ const App = () => {
             <Form  
               value={value}
               error={error}
-              setError={setError}
               setValue={setValue}
               addTask={handleSubmit} 
             />

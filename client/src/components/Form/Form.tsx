@@ -3,13 +3,10 @@ import { Button, FormControl, Stack, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { FormType } from "./types";
 
-const Form = ({ addTask, setValue, setError, value, error }: FormType) => {
+const Form = ({ addTask, setValue, value, error }: FormType) => {
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
         setValue(value);
-        if(value && setError){
-            setError("")
-        }
     }
 
     return (
@@ -27,8 +24,8 @@ const Form = ({ addTask, setValue, setError, value, error }: FormType) => {
                         variant="outlined"
                         value={value}
                         fullWidth
-                        error={Boolean(error)}
-                        helperText={error}
+                        error={Boolean(error?.message)}
+                        helperText={error?.message}
                         onChange={handleChange}
                     />
                 </FormControl>

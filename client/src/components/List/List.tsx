@@ -11,7 +11,6 @@ const TaskList = ({ tasks }: ListType) => {
                     <Item 
                         key={idx} 
                         {...task} 
-                        tasks={tasks}
                     />
                 )
             })}

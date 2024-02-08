@@ -11,7 +11,7 @@ describe("<Form />", () => {
         setValue = jest.fn();
         value = "";
         // eslint-disable-next-line testing-library/no-render-in-setup
-        render(<Form error="" addTask={addTask} setValue={setValue} value={value} />);
+        render(<Form error={{message: ""}} addTask={addTask} setValue={setValue} value={value} />);
     });
 
     it("renders the form", () => {

@@ -7,35 +7,24 @@ import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import { ItemType } from "./types";
 
-const Item = ({ id, name, tasks }: ItemType) => {
+const Item = ({ id, name }: ItemType) => {
     const { removeTask } = useRemoveTask();
-    const { updateTask } =  useUpdateTask();
+    const { updateTask, error } =  useUpdateTask();
     const [isEditing, setIsEditing] = useState(false);
     const [value, setValue] = useState(name);
-    const [error, setError] = useState("");
 
     const handleUpdateTask = async (event: SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const hasTask = tasks.find(task => task.name === value && task.id !== id);
 
-        if(value){
-            if(hasTask){
-                setError("This task is exist already");
-            }else{
-                setIsEditing(false);
-                await updateTask(id, { name: value });
-            }
-        }else{
-            setError("This field is required");
-        }
+        try{
+            await updateTask(id, { name: value });
+            setIsEditing(false);
+        }catch{}
     }
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
         setValue(value);
-        if(value && setError){
-            setError("");
-        }
     }
 
     const handleRemoveTask = async () => {
@@ -75,8 +64,8 @@ const Item = ({ id, name, tasks }: ItemType) => {
                             size="small"
                             value={value}
                             fullWidth
-                            error={Boolean(error)}
-                            helperText={error}
+                            error={Boolean(error?.message)}
+                            helperText={error?.message}
                             onChange={handleChange}
                         />
                         <ListItemIcon>

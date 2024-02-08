@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
+import { ApolloError } from '@apollo/client';
 import Item from "./Item";
 import { useUpdateTask } from "../../gql/useUpdateTask";
 import { useRemoveTask } from "../../gql/useRemoveTask";
@@ -12,6 +13,10 @@ jest.mock("../../gql/useUpdateTask", () => ({
 }));
 
 describe("<Item />", () => {
+    const mockError = new ApolloError({
+        errorMessage: 'An error occurred',
+    });
+
     beforeEach(() => {
         jest.clearAllMocks();
 
@@ -19,7 +24,8 @@ describe("<Item />", () => {
             removeTask: jest.fn(),
         });
         (useUpdateTask as jest.Mock).mockReturnValue({
-            updateTask: jest.fn(),
+            updateTask: jest.fn(() => Promise.resolve()),
+            error: mockError,
         });
     });
     
@@ -39,12 +45,13 @@ describe("<Item />", () => {
     });
 
     it("calls updateTask when form is submitted", async () => {
-        const updateTask = jest.fn();
-        jest.mocked(useUpdateTask).mockReturnValue({ updateTask });
+        const updateTask = jest.fn(() => Promise.resolve());
 
-        const mockItem = { id: "1", name: "Test Task", tasks: [] };
+        jest.mocked(useUpdateTask).mockReturnValue({ updateTask } as any);
+
+        const mockItem = { id: "1", name: "Test Task" };
         render(<Item {...mockItem} />);
-
+        
         fireEvent.click(screen.getByLabelText("edit"));
         fireEvent.change(screen.getByLabelText("Edit task"), { target: { value: "Updated Task" } });
         fireEvent.click(screen.getByLabelText("update"));

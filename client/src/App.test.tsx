@@ -45,12 +45,12 @@ describe("<App />", () => {
 
   beforeEach(() => {
     (useAddTask as jest.Mock).mockReturnValue({
-      addTask: jest.fn().mockResolvedValue({}),
+      addTask: jest.fn().mockRejectedValue(new Error('Task already exists')),
       data: null,
       loading: false,
-      error: null,
+      error: 'Task already exists', 
     });
-
+    
     (useGetTasks as jest.Mock).mockReturnValue({
       tasks: { getTasks: mockTasks },
       loading: false,
@@ -83,7 +83,7 @@ describe("<App />", () => {
     fireEvent.change(screen.getByPlaceholderText("Add new task"), { target: { value: "Task 1" } });
     fireEvent.click(screen.getByText("Add"));
 
-    expect(await screen.findByText("This task is exist already")).toBeInTheDocument();
+    expect(await screen.findByText("Task already exists")).toBeInTheDocument();
   });
 
   it("adds a new task when submitting a unique task name", async () => {
