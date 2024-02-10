@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import TaskList from "./List";
 import { TaskType } from "../../types";
 
-jest.mock("../Item/Item", () => (props: TaskType) => (
+jest.mock("../Task/Task", () => (props: TaskType) => (
     <div data-testid={`task-item-${props.id}`}>
         Task: {props.name}
     </div>

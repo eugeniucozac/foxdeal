@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import App from "./App";
 import { useGetTasks } from "./gql/useGetTasks";
 import { useAddTask } from "./gql/useAddTask";
@@ -17,7 +17,7 @@ jest.mock('./gql/useRemoveTask', () => ({
 }));
 
 jest.mock("./components/Form/Form", () => (props: any) => (
-  <form onSubmit={props.addTask}>
+  <form onSubmit={props.onSubmit}>
     <input
       placeholder="Add new task"
       value={props.value}
@@ -88,19 +88,24 @@ describe("<App />", () => {
 
   it("adds a new task when submitting a unique task name", async () => {
     const newTaskName = "Unique Task";
-    const addTaskSpy = jest.mocked(useAddTask).mockReturnValue({
-      addTask: jest.fn(() => {
-        mockTasks.push({ id: "3", name: newTaskName });
-        return Promise.resolve();
-      }),
+    const addTaskMock = jest.fn().mockImplementation(() => {
+      mockTasks.push({ id: "3", name: newTaskName });
+      return Promise.resolve({ data: { addTask: { id: "3", name: newTaskName } } });
+    });
+  
+    (useAddTask as jest.Mock).mockReturnValue({
+      addTask: addTaskMock,
       data: null,
       loading: false,
       error: undefined,
     });
-
+  
     fireEvent.change(screen.getByPlaceholderText("Add new task"), { target: { value: newTaskName } });
     fireEvent.click(screen.getByText("Add"));
-
-    expect(addTaskSpy().addTask).toHaveBeenCalledWith({ name: newTaskName });
+  
+    await waitFor(() => {
+      expect(addTaskMock).toHaveBeenCalledWith({ name: newTaskName });
+      expect(screen.getByText(newTaskName)).toBeInTheDocument();
+    });
   });
 });

@@ -3,7 +3,7 @@ import { Button, FormControl, Stack, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { FormType } from "./types";
 
-const Form = ({ addTask, setValue, value, error }: FormType) => {
+const Form = ({ onSubmit, setValue, value, error }: FormType) => {
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
         setValue(value);
@@ -11,7 +11,7 @@ const Form = ({ addTask, setValue, value, error }: FormType) => {
 
     return (
         // eslint-disable-next-line jsx-a11y/no-redundant-roles
-        <form onSubmit={addTask} role="form">
+        <form onSubmit={onSubmit} role="form">
             <Stack
                 spacing={1}
                 direction="row"

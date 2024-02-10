@@ -5,9 +5,9 @@ import { useUpdateTask } from "../../gql/useUpdateTask";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
-import { ItemType } from "./types";
+import { TaskType } from "./types";
 
-const Item = ({ id, name }: ItemType) => {
+const Task = ({ id, name }: TaskType) => {
     const { removeTask } = useRemoveTask();
     const { updateTask, error } =  useUpdateTask();
     const [isEditing, setIsEditing] = useState(false);
@@ -19,7 +19,9 @@ const Item = ({ id, name }: ItemType) => {
         try{
             await updateTask(id, { name: value });
             setIsEditing(false);
-        }catch{}
+        }catch{
+            console.log("Failed to fetch data")
+        }
     }
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -85,4 +87,4 @@ const Item = ({ id, name }: ItemType) => {
     );
 };
 
-export default Item;
+export default Task;

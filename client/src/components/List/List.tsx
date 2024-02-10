@@ -1,5 +1,5 @@
 import { List } from "@mui/material";
-import Item from "../Item/Item";
+import Task from "../Task/Task";
 import { ListType } from "./types";
 import { TaskType } from "../../types";
 
@@ -8,7 +8,7 @@ const TaskList = ({ tasks }: ListType) => {
         <List>
             {tasks.map((task: TaskType, idx: number) => {
                 return ( 
-                    <Item 
+                    <Task 
                         key={idx} 
                         {...task} 
                     />

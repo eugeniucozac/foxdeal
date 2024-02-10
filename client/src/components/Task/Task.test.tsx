@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { ApolloError } from '@apollo/client';
-import Item from "./Item";
+import Task from "./Task";
 import { useUpdateTask } from "../../gql/useUpdateTask";
 import { useRemoveTask } from "../../gql/useRemoveTask";
 
@@ -12,7 +12,7 @@ jest.mock("../../gql/useUpdateTask", () => ({
     useUpdateTask: jest.fn(),
 }));
 
-describe("<Item />", () => {
+describe("<Task />", () => {
     const mockError = new ApolloError({
         errorMessage: 'An error occurred',
     });
@@ -29,15 +29,15 @@ describe("<Item />", () => {
         });
     });
     
-    it("renders the item with the correct name", () => {
-        const mockItem = { id: "1", name: "Test Task", tasks: [] };
-        render(<Item {...mockItem} />);
+    it("renders the task with the correct name", () => {
+        const mockTask = { id: "1", name: "Test Task", tasks: [] };
+        render(<Task {...mockTask} />);
         expect(screen.getByText("Test Task")).toBeInTheDocument();
     });
 
     it("enters edit mode when edit button is clicked", () => {
-        const mockItem = { id: "1", name: "Test Task", tasks: [] };
-        render(<Item {...mockItem} />);
+        const mockTask = { id: "1", name: "Test Task", tasks: [] };
+        render(<Task {...mockTask} />);
 
         fireEvent.click(screen.getByLabelText("edit"));
         expect(screen.getByLabelText("Edit task")).toBeInTheDocument();
@@ -49,8 +49,8 @@ describe("<Item />", () => {
 
         jest.mocked(useUpdateTask).mockReturnValue({ updateTask } as any);
 
-        const mockItem = { id: "1", name: "Test Task" };
-        render(<Item {...mockItem} />);
+        const mockTask = { id: "1", name: "Test Task" };
+        render(<Task {...mockTask} />);
         
         fireEvent.click(screen.getByLabelText("edit"));
         fireEvent.change(screen.getByLabelText("Edit task"), { target: { value: "Updated Task" } });
@@ -63,8 +63,8 @@ describe("<Item />", () => {
         const removeTask = jest.fn();
         jest.mocked(useRemoveTask).mockReturnValue({ removeTask });
 
-        const mockItem = { id: "1", name: "Test Task", tasks: [] };
-        render(<Item {...mockItem} />);
+        const mockTask = { id: "1", name: "Test Task", tasks: [] };
+        render(<Task {...mockTask} />);
 
         fireEvent.click(screen.getByLabelText("delete"));
         expect(removeTask).toHaveBeenCalledWith("1");

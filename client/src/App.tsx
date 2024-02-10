@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, SyntheticEvent } from "react";
 import { useTheme } from "@mui/material/styles";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import Form from "./components/Form/Form"
@@ -13,13 +13,15 @@ const App = () => {
   const [value, setValue] = useState("");
   const theme = useTheme();
 
-  const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try{
       await addTask({ name: value });
       setValue("")
-    }catch{}
+    }catch{
+      console.log("Failed to fetch data")
+    }
   };
 
   return (
@@ -71,11 +73,13 @@ const App = () => {
               value={value}
               error={error}
               setValue={setValue}
-              addTask={handleSubmit} 
+              onSubmit={handleSubmit} 
             />
-            <TaskList 
-              tasks={tasks?.getTasks || []} 
-            />
+            {tasks?.getTasks &&
+              <TaskList 
+                tasks={tasks?.getTasks} 
+              />
+            }
           </Stack>
         </Container>
       </Box>
